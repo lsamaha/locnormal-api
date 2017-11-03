@@ -1,0 +1,18 @@
+{
+  "family": "locnormal-api",
+  "containerDefinitions": [
+    {
+      "name": "locnormal-api",
+      "image": "lsamaha/locnormal-api",
+      "cpu": 40,
+      "memory": 4096,
+      "portMappings": [
+        {
+          "containerPort": 5017,
+          "hostPort": 5017
+        }
+      ],
+      "essential": true
+    }
+  ]
+}
