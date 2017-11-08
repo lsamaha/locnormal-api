@@ -1,10 +1,11 @@
 from flask import Flask, request
 from postal.expand import expand_address
 from postal.parser import parse_address
+from error import InvalidUsage
 import json
 
 app = Flask(__name__)
-
+__max_addresses = 5000
 
 @app.route('/parse')
 def parse():
@@ -18,7 +19,21 @@ def expand():
 
 @app.route('/normal')
 def normal():
-    return str(do_expand(request.args.get('address', '')))
+    params = request.args
+    if 'address' in request.args:
+        return str(do_expand(request.args.get('address', '')))
+    elif 'addresses' in request.args:
+        addresses_requested = json.loads(params.get('addresses'))
+        num_addresses = len(addresses_requested)
+        if num_addresses > __max_addresses:
+            raise InvalidUsage(message="too many addresses (received %d max %d)" % (num_addresses, __max_addresses))
+        addresses = list([do_expand(address) for address in addresses_requested])
+        return str(json.dumps(addresses))
+
+
+@app.errorhandler(InvalidUsage)
+def handle_bad_request_param(e):
+    return "Bad request %s" % e
 
 
 def do_parse(address):

@@ -18,6 +18,11 @@ Normalize an address:
 curl http://myhost:5017/normal?address=1+Park+St+Boston+MA+02128
 1 park street boston massachusetts 02128
 ```
+Normalize multiple addresses:
+```json
+curl http://myhost:5017/normal?addresses=%5B%221+Park+St.%2C+Boston+MA+02128%22%2C%22110+Milk+Street%2C+Boston%2C+Massachusetts+02128%22%5D
+["1 park street boston massachusetts 02128", "110 milk street boston massachusetts 02128"]
+```
 
 # scale
 Spin up in an existing ECS cluster with:
@@ -30,5 +35,3 @@ aws ecs run-task --cluster loc-api-dev --task-definition <task-def-arn>
 #note
 This simple container should live in an app subnet and be paired 
 with an nginx container in a public subnet to proxy the public load.
-
-
